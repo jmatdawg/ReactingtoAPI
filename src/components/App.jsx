@@ -1,41 +1,60 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import 'isomorphic-fetch';
 import 'es6-promise'
-import Filmcard from './Filmcard';
-// import Filmcard from './Filmcard';
-
+import FilmList from './FilmList';
+import logo from './logo.png';
+import PeopleList from './PeopleList'
 
 class App extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
-            films: []
-        }
+            films: [],
+            hasLoaded: null,
+            people: []
+        };
     }
 
-componentDidMount() {
+    componentDidMount() {
+        fetch("https://ghibliapi.herokuapp.com/people")
+            .then(response => response.json())
+            .then(person => this.setState({people: person}))
         fetch("https://ghibliapi.herokuapp.com/films")
-        .then(res => res.json())
-        .then(film => this.setState({films: film}))
-}
-  
+            .then(res => res.json())
+            .then(film => this.setState({films: film}))
+     
+    }
+
+    handleAddFilms = () => {
+        this.setState({hasLoaded: this.state.films})
+    }   
+
+    handleAddPeople = () => {
+        this.setState({hasLoaded: this.state.people})
+    }  
+    
     render() {
-        let card = this.state.films.map((item) => {
-            return ( 
-                <div className="card">
-                    <div className="card-block">
-                        <h4 className="card-title">{ item.title }</h4>
-                        <p className="card-text">{ item.description }</p>
-                    </div>
+        if (this.state.hasLoaded === this.state.films) {
+            return (  
+                <FilmList films={this.state.films} />
+
+        )} else if 
+            (this.state.hasLoaded === this.state.people) {
+            return(
+                <div>
+                    <PeopleList people={this.state.people} />
                 </div>
-                );
-            })
-       return (  
-        <div>
-            { card }
-        </div>      
-      );
-  }
+        )} else {
+                return (
+                <Fragment>    
+                    <img src={logo} alt=""/>
+                    <button onClick = {this.handleAddFilms}>Load Films</button>
+                    <button onClick = {this.handleAddPeople}>Load People</button>
+                </Fragment>
+                 )}
+             }
 }
+
 
 export default App;

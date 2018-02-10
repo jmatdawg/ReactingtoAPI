@@ -1,24 +1,17 @@
 import React, { Component } from 'react';
 
 class Filmcard extends Component {
-
-    render() {
-        let card = this.state.films.map((item) => {
-    return ( 
-        <div className="card">
-            <div className="card-block">
-                <h4 className="card-title">{ item.title }</h4>
-                <p className="card-text">{ item.description }</p>
+    render() {    
+        return (
+            <div className="card" key={this.props.film.id}>
+                <div className="card-block">
+                    <h4 className="card-title">Title: { this.props.film.title }</h4>
+                    <h6 className="card-subtitle mb-2 text-muted">Release Date: { this.props.film.release_date }</h6>
+                    <p className="card-text">Desrciption: { this.props.film.description }</p>
+                </div>
             </div>
-        </div>
         );
-    })
-    return(
-        <div>
-            { card }
-        </div>
-    );
-}
+    }
 }
     
 export default Filmcard;
